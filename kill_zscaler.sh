@@ -6,12 +6,8 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 while true; do
-    if ip link show zcctun0 >/dev/null 2>&1; then
-        ifconfig zcctun0 down
-    else
-        if ip link show zcctun1 >/dev/null 2>&1; then
-            ifconfig zcctun1 down
-        fi
-    fi
+    for link in $(ip link list | grep -E -e 'zcctun[0-9]+' -o); do
+      ifconfig $link down
+    done
     sleep 10
 done
